@@ -21,7 +21,8 @@
 }
 
 @property (strong,nonatomic) RFMarkdownSyntaxStorage *syntaxStorage;
-@property (nonatomic, assign) UIEdgeInsets priorInset;
+@property (nonatomic, assign) UIEdgeInsets priorContentInset;
+@property (nonatomic, assign) UIEdgeInsets priorScrollIndicatorInset;
 
 @end
 
@@ -29,7 +30,8 @@
 
 @implementation RFMarkdownTextView
 @synthesize imagePickerDelegate;
-@synthesize priorInset;
+@synthesize priorContentInset;
+@synthesize priorScrollIndicatorInset;
 
 - (id)initWithFrame:(CGRect)frame {
     
@@ -51,32 +53,7 @@
         [super setDelegate:_delegateProxy];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-    
     return self;
-}
-
-- (void)keyboardWillShow:(NSNotification*)notification {
-    CGRect keyboardRect = [self convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
-    if (CGRectIsEmpty(keyboardRect)) {
-        return;
-    }
-    
-    self.priorInset = self.contentInset;
-    
-    self.contentInset = UIEdgeInsetsMake(self.contentInset.top, self.contentInset.left, keyboardRect.size.height, self.contentInset.right);
-    self.scrollIndicatorInsets = self.contentInset;
-}
-
-- (void)keyboardWillBeHidden:(NSNotification*)notification {
-    self.contentInset = priorInset;
-    self.scrollIndicatorInsets = self.contentInset;
 }
 
 - (void)dealloc {
