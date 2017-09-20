@@ -157,7 +157,7 @@
     self.tintColor = previousTint;
 }
 
-- (RFToolbarButton *)createButtonWithTitle:(NSString*)title andEventHandler:(void(^)())handler {
+- (RFToolbarButton *)createButtonWithTitle:(NSString*)title andEventHandler:(void(^)(void))handler {
     return [RFToolbarButton buttonWithTitle:title andEventHandler:handler forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -204,7 +204,7 @@
 @synthesize delegateTarget = _delegateTarget;
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    BOOL (^forwardCurrentInvocation)() =  ^{
+    BOOL (^forwardCurrentInvocation)(void) =  ^{
         id<UITextViewDelegate> target = self.delegateTarget;
         if ([target respondsToSelector:_cmd]) {
             return [target textView:textView shouldChangeTextInRange:range replacementText:text];
