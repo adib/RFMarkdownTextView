@@ -30,6 +30,21 @@
 
 @property (nonatomic,strong,readonly) UIFont* bodyFont;
 
+@property (nonatomic,strong,readonly) UIColor* bodyTextColor;
+
+@property (nonatomic, strong, readonly) UIColor* heading1TextColor;
+
+@property (nonatomic, strong, readonly) UIColor* heading2TextColor;
+
+@property (nonatomic, strong, readonly) UIColor* heading3TextColor;
+
+@property (nonatomic, strong, readonly) UIColor* codeTextColor;
+
+@property (nonatomic, strong, readonly) UIColor* linkTextColor;
+
+@property (nonatomic, strong, readonly) UIColor* headingUnderlineTextColor;
+
+
 @end
 
 @implementation RFMarkdownSyntaxStorage {
@@ -97,11 +112,108 @@
 
 #pragma mark Property Access
 
+@synthesize bodyTextColor = _bodyTextColor;
+
+-(UIColor *)bodyTextColor {
+    if (!_bodyTextColor) {
+        if (@available(iOS 13.0, *)) {
+            _bodyTextColor = [UIColor labelColor];
+        } else {
+            // Fallback on earlier versions
+            _bodyTextColor = [UIColor blackColor];
+        }
+    }
+    return _bodyTextColor;
+}
+
+@synthesize codeTextColor = _codeTextColor;
+
+-(UIColor *)codeTextColor {
+    if (!_codeTextColor) {
+        _codeTextColor = [UIColor systemGrayColor];
+    }
+    return _codeTextColor;
+}
+
+
+@synthesize linkTextColor = _linkTextColor;
+
+-(UIColor *)linkTextColor {
+    if (!_linkTextColor) {
+        if (@available(iOS 13.0, *)) {
+            _linkTextColor = [UIColor linkColor];
+        } else {
+            // Fallback on earlier versions
+            _linkTextColor = [UIColor colorWithRed:0.255 green:0.514 blue:0.769 alpha:1.00];
+        }
+    }
+    return _linkTextColor;
+}
+
+@synthesize heading1TextColor = _heading1TextColor;
+
+-(UIColor *)heading1TextColor {
+    if (!_heading1TextColor) {
+        if (@available(iOS 13.0, *)) {
+            _heading1TextColor = [UIColor labelColor];
+        } else {
+            // Fallback on earlier versions
+            _heading1TextColor = [UIColor blackColor];
+        }
+    }
+    return _heading1TextColor;
+}
+
+
+@synthesize heading2TextColor = _heading2TextColor;
+
+-(UIColor *)heading2TextColor {
+    if (!_heading2TextColor) {
+        if (@available(iOS 13.0, *)) {
+            _heading2TextColor = [UIColor secondaryLabelColor];
+        } else {
+            // Fallback on earlier versions
+            _heading2TextColor = [UIColor darkGrayColor];
+        }
+    }
+    return _heading2TextColor;
+}
+
+@synthesize heading3TextColor = _heading3TextColor;
+
+-(UIColor *)heading3TextColor {
+    if (!_heading3TextColor) {
+        if (@available(iOS 13.0, *)) {
+            _heading3TextColor = [UIColor tertiaryLabelColor];
+        } else {
+            // Fallback on earlier versions
+            _heading3TextColor = [UIColor grayColor];
+        }
+    }
+    return _heading3TextColor;
+}
+
+@synthesize headingUnderlineTextColor = _headingUnderlineTextColor;
+
+
+-(UIColor *)headingUnderlineTextColor {
+    if (!_headingUnderlineTextColor) {
+        if (@available(iOS 13.0, *)) {
+            _headingUnderlineTextColor = [UIColor opaqueSeparatorColor];
+        } else {
+            // Fallback on earlier versions
+            _headingUnderlineTextColor = [UIColor colorWithWhite:0.933 alpha:1.0];
+        }
+    }
+    return _headingUnderlineTextColor;
+}
+
 @synthesize bodyAttributes = _bodyAttributes;
 
 -(NSDictionary *)bodyAttributes {
     if (!_bodyAttributes) {
-        _bodyAttributes = @{NSFontAttributeName:self.bodyFont, NSForegroundColorAttributeName:[UIColor blackColor],NSUnderlineStyleAttributeName:[NSNumber numberWithInt:NSUnderlineStyleNone]};
+        
+        _bodyAttributes = @{NSFontAttributeName:self.bodyFont, NSForegroundColorAttributeName:self.bodyTextColor,NSUnderlineStyleAttributeName:[NSNumber numberWithInt:NSUnderlineStyleNone]};
     }
     return _bodyAttributes;
 }
@@ -126,7 +238,7 @@
         CGFloat bodyFontSize = bodyFont.pointSize;
         CGFloat smallerFontSize = roundf(bodyFontSize * 0.8 / 2) * 2;
         
-        UIColor* codeColor = [UIColor grayColor];
+        UIColor* codeColor = self.codeTextColor;
         
         NSDictionary *boldAttributes = @{NSFontAttributeName:[UIFont fontWithName:@"Menlo-Bold" size:bodyFontSize]};
         NSDictionary *italicAttributes = @{NSFontAttributeName:[UIFont fontWithName:@"Menlo-Italic" size:bodyFontSize]};
@@ -137,11 +249,11 @@
         
         UIFont* headerFont = [UIFont fontWithName:@"Menlo-Bold" size:bodyFontSize];
         NSNumber* headerUnderlineStyle = [NSNumber numberWithInt:NSUnderlineStyleSingle];
-        UIColor* headerUnderlineColor = [UIColor colorWithWhite:0.933 alpha:1.0];
+        UIColor* headerUnderlineColor = self.headingUnderlineTextColor;
         
-        NSDictionary *headerOneAttributes = @{NSFontAttributeName:headerFont, NSUnderlineStyleAttributeName:headerUnderlineStyle, NSUnderlineColorAttributeName:headerUnderlineColor,NSForegroundColorAttributeName : [UIColor blackColor]};
-        NSDictionary *headerTwoAttributes = @{NSFontAttributeName:headerFont, NSUnderlineStyleAttributeName:headerUnderlineStyle, NSUnderlineColorAttributeName:headerUnderlineColor,NSForegroundColorAttributeName : [UIColor darkGrayColor]};
-        NSDictionary *headerThreeAttributes = @{NSFontAttributeName:headerFont, NSUnderlineStyleAttributeName:headerUnderlineStyle, NSUnderlineColorAttributeName:headerUnderlineColor,NSForegroundColorAttributeName : [UIColor grayColor]};
+        NSDictionary *headerOneAttributes = @{NSFontAttributeName:headerFont, NSUnderlineStyleAttributeName:headerUnderlineStyle, NSUnderlineColorAttributeName:headerUnderlineColor,NSForegroundColorAttributeName : self.heading1TextColor};
+        NSDictionary *headerTwoAttributes = @{NSFontAttributeName:headerFont, NSUnderlineStyleAttributeName:headerUnderlineStyle, NSUnderlineColorAttributeName:headerUnderlineColor,NSForegroundColorAttributeName : self.heading2TextColor};
+        NSDictionary *headerThreeAttributes = @{NSFontAttributeName:headerFont, NSUnderlineStyleAttributeName:headerUnderlineStyle, NSUnderlineColorAttributeName:headerUnderlineColor,NSForegroundColorAttributeName : self.heading3TextColor};
         
         NSDictionary *strikethroughAttributes = @{NSFontAttributeName:bodyFont, NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle)};
         
@@ -170,7 +282,7 @@
             }
             return pattern;
         };
-        NSDictionary *linkAttributes = @{NSForegroundColorAttributeName:[UIColor colorWithRed:0.255 green:0.514 blue:0.769 alpha:1.00]};
+        NSDictionary *linkAttributes = @{NSForegroundColorAttributeName:self.linkTextColor};
         
         _attributeDictionary = @{
                                  regex(@"~~(\\w+(\\s\\w+)*)~~") :strikethroughAttributes,
